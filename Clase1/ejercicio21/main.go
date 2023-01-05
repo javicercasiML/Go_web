@@ -23,7 +23,6 @@ func main() {
 	r.GET("/ping", handlers.Ping)
 	router.GET("", handlers.Productos)
 	router.GET("/:id", handlers.GetById)
-	router.GET("/search", handlers.Search)
 
 	r.Run()
 
