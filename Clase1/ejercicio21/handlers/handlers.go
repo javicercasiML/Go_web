@@ -9,7 +9,7 @@ import (
 )
 
 func Ping(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "pong")
+	ctx.JSON(http.StatusOK, globals.Response{Message: "Succeed", Data: "pong"})
 }
 
 func Productos(ctx *gin.Context) {

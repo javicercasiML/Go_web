@@ -23,13 +23,14 @@ func main() {
 	r.GET("/ping", handlers.Ping)
 	router.GET("", handlers.Productos)
 	router.GET("/:id", handlers.GetById)
+	router.GET("/search", handlers.Search)
 
 	r.Run()
 
 }
 
 func ReadFile() (err error) {
-	file, err := os.Open("products.json")
+	file, err := os.Open("products1.json")
 	if err != nil {
 		return globals.ErrOpen
 	}
