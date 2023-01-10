@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 
 	"ejemplos/ejercicio22/cmd/handlers"
-	"ejemplos/ejercicio22/services/models"
+	"ejemplos/ejercicio22/services"
 )
 
 func main() {
@@ -17,32 +18,35 @@ func main() {
 		panic(err)
 	}
 
+	//server
 	r := gin.Default()
-	router := r.Group("/products")
 
-	//r.GET("/ping", handlers.Ping)
+	//router
+	router := r.Group("/products")
 	router.GET("", handlers.Get)
-	//router.GET("/:id", handlers.GetById)
+	router.GET("/:id", handlers.GetByID)
 	router.POST("", handlers.Create)
 
-	r.Run()
-
+	// start
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func ReadFile() (err error) {
 	file, err := os.Open("products1.json")
 	if err != nil {
-		return models.ErrOpen
+		return services.ErrOpen
 	}
 	defer file.Close()
 
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return models.ErrRead
+		return services.ErrRead
 	}
-	err = json.Unmarshal(bytes, &models.Products)
+	err = json.Unmarshal(bytes, &services.Products)
 	if err != nil {
-		return models.ErrJson
+		return services.ErrJson
 	}
 	return
 }

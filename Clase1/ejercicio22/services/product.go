@@ -8,19 +8,30 @@ import (
 
 var (
 	ErrAlreadyExist = errors.New("error: item already exist")
+	ErrNotExist     = errors.New("error: item not exist")
+	ErrOpen         = errors.New("\nError al abrir el archivo.")
+	ErrRead         = errors.New("\nError al leer el archivo.")
+	ErrJson         = errors.New("\nError al transformar el archivo Json.")
 )
 
+var Products = []models.Product{}
 var lastID = 3
 
 // read
 func Get() []models.Product {
-	return models.Products
+	return Products
 }
-func GetByID() {
+func GetByID(id int) (models.Product, error) {
+	for _, product := range Products {
+		if product.Id == id {
+			return product, nil
+		}
+	}
+	return models.Product{}, ErrNotExist
+}
 
-}
 func ExistCode(code string) bool {
-	for _, w := range models.Products {
+	for _, w := range Products {
 		if w.CodeValue == code {
 			return true
 		}
@@ -46,6 +57,6 @@ func Create(name string, quantity int, code string, is_published bool, expiratio
 		Price:       price,
 	}
 
-	models.Products = append(models.Products, product)
+	Products = append(Products, product)
 	return product, nil
 }

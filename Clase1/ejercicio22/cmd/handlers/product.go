@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -78,4 +79,30 @@ func Create(ctx *gin.Context) {
 
 	// response
 	ctx.JSON(http.StatusCreated, response.Ok("suceed to create product", product))
+}
+
+func GetByID(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+	if token != SECRET_KEY {
+		ctx.JSON(http.StatusUnauthorized, response.Err(ErrUnauthorized))
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.Err(err))
+		return
+	}
+
+	// request
+
+	// process
+	product, err := services.GetByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, response.Err(err))
+		return
+	}
+
+	// response
+	ctx.JSON(http.StatusOK, response.Ok("succeed to get product", product))
 }
